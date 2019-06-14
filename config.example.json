@@ -1,0 +1,12 @@
+{
+    "api": {
+        "id": YOUR_TELEGRAM_API_ID_HERE,
+        "hash": "YOUR_TELEGRAM_API_HASH_HERE"
+    },
+    "keeper": {
+        "antiFloodWaitRange": {
+            "min": 60,
+            "max": 600
+        }
+    }
+}
