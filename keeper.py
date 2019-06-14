@@ -35,7 +35,7 @@ if not os.path.exists("config.json"):
     print("ERROR: Config file not found , please copy and edit config.example.json.")
 
 
-config = json.load(open("config.json", r, encoding="utf-8"))
+config = json.load(open("config.json", "r", encoding="utf-8"))
 
 proxies = list(map(lambda proxy:
     (proxy.split(",")[0], int(proxy.split(",")[1]), proxy.split(",")[2]),
