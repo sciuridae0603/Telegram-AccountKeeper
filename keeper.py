@@ -41,9 +41,9 @@ proxies = list(map(lambda proxy:
     (proxy.split(",")[0], int(proxy.split(",")[1]), proxy.split(",")[2]),
     [proxy for proxy in open("proxies.txt", "r").read().split("\n")[1:] if proxy != ""]))
 
-accounts = json.load(open("accounts.json", "r", encoding="utf-8")
+accounts = json.load(open("accounts.json", "r", encoding="utf-8"))
 
-clients={}
+tmpClient = {}
 
 def randomString(stringLength):
     letters=string.ascii_lowercase + string.digits
