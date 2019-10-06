@@ -4,7 +4,7 @@
 from telethon import events
 from telethon.sync import TelegramClient
 from telethon.tl.types import InputPhoneContact
-from telethon.tl.functions.contacts import ImportContactsRequest
+from telethon.tl.functions.account import UpdateStatusRequest
 from telethon.network.connection.tcpmtproxy import ConnectionTcpMTProxyRandomizedIntermediate
 from telethon.errors import PhoneNumberInvalidError, SessionPasswordNeededError, FloodWaitError, PhoneNumberBannedError
 
@@ -308,18 +308,25 @@ def main():
         account=input("INPUT: Phone Number / ID / all : ")
 
         def keep(account):
+            print("INFO: This operation may take 1 minute to run.")
             account=getAccount(account)
             client=generateAuthedClient(account)
-            client.send_message("me", "keep")
-            waitSec=random.randint(config["keeper"]["antiFloodWaitRange"]["min"], config["keeper"]["antiFloodWaitRange"]["max"])
-            print("INFO: Wait for %d second for anti flood wait" % waitSec)
-            time.sleep(waitSec)
+            time.sleep(random.randint(3,8))
+            client(UpdateStatusRequest(offline=False))
+            print("INFO: Set account status to Online.")
+            time.sleep(random.randint(5,20))
+            client(UpdateStatusRequest(offline=True))
+            print("INFO: Set account status to Offline.")
+            time.sleep(random.randint(3,8))
             client.disconnect()
 
         if account == "all":
             for k in accounts:
                 try:
                     keep(k)
+                    waitSec=random.randint(config["keeper"]["antiFloodWaitRange"]["min"], config["keeper"]["antiFloodWaitRange"]["max"])
+                    print("INFO: Wait for %d second for anti flood wait" % waitSec)
+                    time.sleep(waitSec)
                 except PhoneNumberBannedError:
                     print("WARN: Account has been gone.")
         else:
