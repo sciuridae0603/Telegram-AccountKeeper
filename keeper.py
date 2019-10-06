@@ -340,6 +340,9 @@ while True:
     except FloodWaitError:
         print("WARN: FLOOD LIMIT")
         pass
+    except KeyboardInterrupt:
+        print("WARN: Ctrl+C exiting..")
+        sys.exit()
     except:
         import traceback
         traceback.print_exc()
