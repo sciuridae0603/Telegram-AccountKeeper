@@ -6,7 +6,7 @@ from telethon.sync import TelegramClient
 from telethon.tl.types import InputPhoneContact
 from telethon.tl.functions.account import UpdateStatusRequest
 from telethon.network.connection.tcpmtproxy import ConnectionTcpMTProxyRandomizedIntermediate
-from telethon.errors import PhoneNumberInvalidError, SessionPasswordNeededError, FloodWaitError, PhoneNumberBannedError , PhoneNumberUnoccupiedError
+from telethon.errors import PhoneNumberInvalidError, SessionPasswordNeededError, FloodWaitError, PhoneNumberBannedError, PhoneNumberUnoccupiedError
 
 from requests import ConnectionError
 
@@ -65,7 +65,7 @@ class Account:
     def save(self):
         if not hasattr(accounts, self.phone):
             accounts[self.phone] = {}
-        accounts[self.phone]["phone"] = self.phone
+        accounts[self.phone]["phone"] = self.phone.replace('\t','').replace(' ','')
         accounts[self.phone]["twoVerify"] = self.twoVerify
         accounts[self.phone]["nick"] = self.nick
         saveConfig()
@@ -189,21 +189,22 @@ def main():
         try:
             client.sign_in(phone=account.phone)
             if not client.is_user_authorized():
-                sent=client.send_code_request(phone=account.phone,force_sms=True)
-                code=input("INPUT: Verification Code : ")
+                sent = client.send_code_request(
+                    phone=account.phone, force_sms=True)
+                code = input("INPUT: Verification Code : ")
                 try:
                     client.sign_in(account.phone, code)
                 except PhoneNumberUnoccupiedError:
                     client.sign_up(phone=account.phone,
-                               first_name=".",last_name=".", code=code)
-                    twoVerify=randomString(10)
+                                   first_name=".", last_name=".", code=code)
+                    twoVerify = randomString(10)
                     client.edit_2fa(current_password=account.twoVerify)
                     account.editTwoVerify(twoVerify)
                     client.edit_2fa(new_password=twoVerify)
                     print("INFO: Two verification code set to => %s ." %
                           account.twoVerify)
                 except SessionPasswordNeededError:
-                    code=input("INPUT: Two Step Verification Code : ")
+                    code = input("INPUT: Two Step Verification Code : ")
                     account.editTwoVerify(code)
                     client.sign_in(password=code)
             if client.is_user_authorized():
